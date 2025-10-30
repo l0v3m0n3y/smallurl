@@ -36,3 +36,13 @@ proc short_link*(
     result = parseJson(body)
   finally:
     client.close()
+
+proc user_info*(user:string): Future[JsonNode] {.async.} =
+  let client = newAsyncHttpClient()
+  try:
+    client.headers = newHttpHeaders({"Connection": "keep-alive", "content-type": "application/json","host": "urlshortner.orangesmoke-119c66f5.eastus.azurecontainerapps.io", "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36","Origin":"https://smallurl.in"})
+    let response = await client.get("https://urlshortner.orangesmoke-119c66f5.eastus.azurecontainerapps.io/api/url/user/" & user)
+    let body = await response.body
+    result = parseJson(body)
+  finally:
+    client.close()
